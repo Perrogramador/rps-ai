@@ -1,1 +1,1 @@
-## Rock, paper scissors image classifer
+## Rock, paper scissors image classifier
