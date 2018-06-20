@@ -31,7 +31,7 @@ class Game():
         print("You played: " + self.user_move)
         print("AI played: " + self.ai_move)
 
-        return self.who_wins()
+        self.who_wins()
 
     def calculate_move(self):
         """
@@ -40,6 +40,7 @@ class Game():
         import random
         return random.choice(self.MOVES)
 
+    # TODO refactor to use a circle-sort algorithm if possible
     def who_wins(self):
         """
         Given both players have made a move,
@@ -62,14 +63,21 @@ class Game():
             or (p2 == s and p1 == p):
                 return self._set_winner(2)
             
-            raise Exception
+        raise Exception
 
+    # NOTE not sure if this function is good practice
     def _set_winner(self, player):
         """
         Sets winner and prints
-        :player: integer (0|1|2)
+        :param player: integer (0|1|2)
         """
 
+        if player not in [0, 1, 2]:
+            raise ValueError('Input argument must be 0, 1 or 2. %d provided.'
+                            % player)
+        if not (self.ai_move and self.user_move):
+            raise ValueError('The game is missing a move.')
+            
         if player == 0:
             self.winner = "Tie"
             print ("It's a tie! " + self.user_move + "==" + self.ai_move)
@@ -81,8 +89,6 @@ class Game():
             self.winner = "User"
             print ("You win! "
                     + self.user_move + " defeats " + self.ai_move)
-        else:
-            raise ValueError('_winner() takes 1 argument: player must be 1 or 2. %d provided.' % player)
 
 # if __name__ == '__main__':
 #     import doctest
