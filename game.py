@@ -11,17 +11,19 @@ The idea is to have both play their moves at the same time.
 
 r = "r"; p = "p"; s = "s"
 
-class RPS():
+class Game():
     # rock, paper, scissors
     MOVES = ["r", "p", "s"]
 
     def __init__(self):
-        pass
+        self.ai_move = ''
+        self.user_move = ''
+        self.winner = ''
 
     def play(self, move):
         """
-        Takes a user move and calculates AI move simultaneously
-        Determines winner
+        Takes a user move and simultaneously calculates AI move.
+        Returns winner
         """
         self.user_move = move if move in self.MOVES else False
         self.ai_move = self.calculate_move()
@@ -48,32 +50,35 @@ class RPS():
 
         if p1 in self.MOVES and p2 in self.MOVES:
             if p1 == p2:
-                return self._winner(0)
+                return self._set_winner(0)
 
             if (p1 == r and p2 == s) \
             or (p1 == p and p2 == r) \
             or (p1 == s and p2 == p):
-                return self._winner(1)
+                return self._set_winner(1)
 
             if (p2 == r and p1 == s) \
             or (p2 == p and p1 == r) \
             or (p2 == s and p1 == p):
-                return self._winner(2)
+                return self._set_winner(2)
             
             raise Exception
 
-    def _winner(self, player):
+    def _set_winner(self, player):
         """
-        Return winner and winning move
-        :player: integer (1|2)
-        :return: string
+        Sets winner and prints
+        :player: integer (0|1|2)
         """
+
         if player == 0:
+            self.winner = "Tie"
             print ("It's a tie! " + self.user_move + "==" + self.ai_move)
         elif player == 1:
+            self.winner = "AI"
             print ("AI wins! "
                     + self.ai_move + " defeats " + self.user_move)
         elif player == 2:
+            self.winner = "User"
             print ("You win! "
                     + self.user_move + " defeats " + self.ai_move)
         else:
