@@ -1,4 +1,7 @@
+#!/usr/bin/env python3
+
 import cv2
+import numpy as np
 
 class Tagger:
     DEST_FOLDER = './testdata/'
@@ -9,6 +12,12 @@ class Tagger:
         self.cap = cv2.VideoCapture(0)
         self.tagIdx = 0
         self.count = 0
+        self.h = 0
+        self.s = 0
+        self.v = 0
+        self.H = 0
+        self.S = 0
+        self.V = 0
     
     def nextTag(self):
         self.tagIdx = (self.tagIdx + 1) % 3
@@ -25,6 +34,19 @@ class Tagger:
         cv2.imwrite(self.DEST_FOLDER + self.TAGS[self.tagIdx] + '/' + str(self.count) + '.png', frame)
         print(self.count)
 
+    def set_h(self, n):
+        self.h = n
+    def set_s(self, n):
+        self.s = n
+    def set_v(self, n):
+        self.v = n
+    def set_H(self, n):
+        self.H = n
+    def set_S(self, n):
+        self.S = n
+    def set_V(self, n):
+        self.V = n
+
     def capture(self):
         while True:
             ret, frame = self.cap.read()
@@ -37,18 +59,38 @@ class Tagger:
                 self.FRAME_COORDS[0][0] + 2 : self.FRAME_COORDS[1][0] - 1
             ]
 
-            self.write(frame)
-            cv2.imshow("img", frame)
+            # Convert frame to HSV
+            hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
             
-            key = cv2.waitKey(1)
+            lower_blue = np.array([self.h, self.s, self.v])
+            upper_blue = np.array([self.H, self.S, self.V])
+
+
+            mask = cv2.inRange(hsv, lower_blue, upper_blue)
+            res = cv2.bitwise_and(hsv,frame, mask= mask)
+
+            self.write(hsv)
+            #cv2.imshow("frame", frame)
+            cv2.imshow("hsv", hsv)
+            cv2.imshow("mask", mask)
+            #cv2.imshow("res", res)
+            cv2.createTrackbar("h", "hsv", 0, 255, self.set_h)
+            cv2.createTrackbar("s", "hsv", 0, 255, self.set_s)
+            cv2.createTrackbar("v", "hsv", 0, 255, self.set_v)
+            cv2.createTrackbar("H", "hsv", 0, 255, self.set_H)
+            cv2.createTrackbar("S", "hsv", 0, 255, self.set_S)
+            cv2.createTrackbar("V", "hsv", 0, 255, self.set_V)
+            
+            
+            key = cv2.waitKey(1)    
             # commands
             if key & 0xFF == ord("q"):
                 break
-            if key & 0xFF == ord("s"):
-                self.saveFrame(cropped)
+            # if key & 0xFF == ord("s"):
+            #     self.saveFrame(cropped)
             if key & 0xFF == ord("t"):
                 self.nextTag()
-             
+                
 
         cv2.destroyAllWindows()
 
@@ -65,6 +107,6 @@ class Tagger:
             (self.FRAME_COORDS[0][0], self.FRAME_COORDS[0][1] - 40),
             cv2.FONT_HERSHEY_SIMPLEX, 1.0, (255,255,255), 2)
 
+
 if __name__ == "__main__":
     test = Tagger()
-    test.capture()
