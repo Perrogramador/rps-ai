@@ -56,11 +56,6 @@ class Tagger:
             frame = cv2.flip(frame, 1)
             frame = cv2.rectangle(frame, *self.FRAME_COORDS, (255,0,0), 2)
 
-            # cropped = frame[
-                # self.FRAME_COORDS[0][1] + 2 : self.FRAME_COORDS[1][1] - 1,
-                # self.FRAME_COORDS[0][0] + 2 : self.FRAME_COORDS[1][0] - 1
-            # ]
-
             # Convert frame to HSV
             hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
             
@@ -71,11 +66,16 @@ class Tagger:
             mask = cv2.inRange(hsv, lower_blue, upper_blue)
             res = cv2.bitwise_and(frame, frame, mask= mask)
 
+            cropped = hsv[
+                self.FRAME_COORDS[0][1] + 2 : self.FRAME_COORDS[1][1] - 1,
+                self.FRAME_COORDS[0][0] + 2 : self.FRAME_COORDS[1][0] - 1
+            ]
+
             self.write(hsv)
             #cv2.imshow("frame", frame)
             cv2.imshow("hsv", hsv)
             # cv2.imshow("mask", mask)
-            cv2.imshow("res", res)
+            # cv2.imshow("res", res)
             cv2.createTrackbar("h", "hsv", 0, 255, self.set_h)
             cv2.createTrackbar("s", "hsv", 0, 255, self.set_s)
             cv2.createTrackbar("v", "hsv", 0, 255, self.set_v)
@@ -88,8 +88,8 @@ class Tagger:
             # commands
             if key & 0xFF == ord("q"):
                 break
-            # if key & 0xFF == ord("s"):
-            #     self.saveFrame(cropped)
+            if key & 0xFF == ord("s"):
+                self.saveFrame(cropped)
             if key & 0xFF == ord("t"):
                 self.nextTag()
                 
@@ -98,11 +98,11 @@ class Tagger:
 
     def write(self, img):
         cv2.putText(img, "Press [s] to toggle recording",
-            (self.FRAME_COORDS[0][0] - 100, self.FRAME_COORDS[0][1] + 300),
+            (self.FRAME_COORDS[0][0] - 800, self.FRAME_COORDS[0][1] + 500),
             cv2.FONT_HERSHEY_SIMPLEX, 1.0, (255,255,255), 2)
 
         cv2.putText(img, "Press [t] to change tag",
-            (self.FRAME_COORDS[0][0] - 100, self.FRAME_COORDS[0][1] + 340),
+            (self.FRAME_COORDS[0][0] - 80, self.FRAME_COORDS[0][1] + 540),
             cv2.FONT_HERSHEY_SIMPLEX, 1.0, (255,255,255), 2)
 
         cv2.putText(img, self.TAGS[self.tagIdx],
