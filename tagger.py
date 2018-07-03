@@ -2,10 +2,12 @@
 
 import cv2
 import numpy as np
+from augmenter import augment_img
+import time
 
 class Tagger:
-    DEST_FOLDER = './testdata/'
-    FRAME_COORDS = ((355,100), (700,500))
+    DEST_FOLDER = './training_data/'
+    FRAME_COORDS = ((350,100), (650,400))
     TAGS = ['rock', 'paper','scissors']
 
     def __init__(self):
@@ -32,9 +34,14 @@ class Tagger:
         :param gesture: The hand gesture shown (rock | paper | scissor | bird)
         """
 
-        self.count += 1
-        cv2.imwrite(self.DEST_FOLDER + self.TAGS[self.tagIdx] + '/' + str(self.count) + '.png', frame)
-        print(self.count)
+        # half image size to be 150x150px
+        img = cv2.resize(frame, (150, 150))
+        
+        dir = self.DEST_FOLDER + self.TAGS[self.tagIdx]
+        fileName = str(time.time()).replace('.', '')
+        print(dir + '/' + fileName)
+        cv2.imwrite(dir + '/' + fileName + '.jpeg', img)
+        augment_img(img, dir, fileName)
 
     def set_h(self, n):
         self.h = n
@@ -66,14 +73,14 @@ class Tagger:
             mask = cv2.inRange(hsv, lower_blue, upper_blue)
             res = cv2.bitwise_and(frame, frame, mask= mask)
 
-            cropped = hsv[
+            cropped = frame[
                 self.FRAME_COORDS[0][1] + 2 : self.FRAME_COORDS[1][1] - 1,
                 self.FRAME_COORDS[0][0] + 2 : self.FRAME_COORDS[1][0] - 1
             ]
 
-            self.write(hsv)
-            #cv2.imshow("frame", frame)
-            cv2.imshow("hsv", hsv)
+            self.write(frame)
+            cv2.imshow("frame", frame)
+            # cv2.imshow("hsv", hsv)
             # cv2.imshow("mask", mask)
             # cv2.imshow("res", res)
             cv2.createTrackbar("h", "hsv", 0, 255, self.set_h)
@@ -98,7 +105,7 @@ class Tagger:
 
     def write(self, img):
         cv2.putText(img, "Press [s] to toggle recording",
-            (self.FRAME_COORDS[0][0] - 800, self.FRAME_COORDS[0][1] + 500),
+            (self.FRAME_COORDS[0][0] - 80, self.FRAME_COORDS[0][1] + 500),
             cv2.FONT_HERSHEY_SIMPLEX, 1.0, (255,255,255), 2)
 
         cv2.putText(img, "Press [t] to change tag",

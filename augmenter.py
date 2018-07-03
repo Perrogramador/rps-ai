@@ -15,17 +15,18 @@ datagen = ImageDataGenerator(
         horizontal_flip=True,
         fill_mode='nearest')
 
-img = load_img('testdata/rock/40.png')
-x = img_to_array(img)
-x = x.reshape((1,) + x.shape)
+def augment_img(img, dir, tag):
+    # img = load_img(path)
+    x = img_to_array(img)
+    x = x.reshape((1,) + x.shape)
 
-i=0
-for batch in datagen.flow(
-                        x,
-                        batch_size=1,
-                        save_to_dir='training_data',
-                        save_prefix='aa',
-                        save_format='jpeg'):
-    i += 1
-    if i > 20:
-        break
+    i=0
+    for batch in datagen.flow(
+                            x,
+                            batch_size=1,
+                            save_to_dir=dir,
+                            save_prefix=tag+'_'+str(i),
+                            save_format='jpeg'):
+        i += 1
+        if i > 20:
+            break
