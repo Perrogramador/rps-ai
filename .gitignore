@@ -1,4 +1,7 @@
 *.swp
 .vscode/
+.DS_Store
 __pycache__/
 testdata/
+training_data/
+training_data_manual/
