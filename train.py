@@ -1,9 +1,10 @@
 from keras.models import Sequential
 from keras.layers import Conv2D, MaxPooling2D
 from keras.layers import Activation, Dropout, Flatten, Dense
+from keras.preprocessing.image import ImageDataGenerator, array_to_img, img_to_array, load_img
 
 model = Sequential()
-model.add(Conv2D(32, (3,3), input_shape=(3, 150, 150)))
+model.add(Conv2D(32, (3,3), input_shape=(150, 150, 3)))
 model.add(Activation('relu'))
 model.add(MaxPooling2D(pool_size=(2,2)))
 
@@ -53,7 +54,7 @@ train_generator = train_datagen.flow_from_directory(
 
 # this is a similar generator, for validation data
 validation_generator = test_datagen.flow_from_directory(
-        'training_data',
+        'training_data_manual',
         target_size=(150, 150),
         batch_size=batch_size,
         class_mode='binary')
