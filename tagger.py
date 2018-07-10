@@ -38,10 +38,10 @@ class Tagger:
         img = cv2.resize(frame, (150, 150))
         
         dir = self.DEST_FOLDER + self.TAGS[self.tagIdx]
-        fileName = str(time.time()).replace('.', '')
+        fileName = str(time.time()).replace('.', '')[6:]
         print(dir + '/' + fileName)
         cv2.imwrite(dir + '/' + fileName + '.jpeg', img)
-        augment_img(img, dir, fileName)
+        # augment_img(img, dir, fileName)
 
     def set_h(self, n):
         self.h = n

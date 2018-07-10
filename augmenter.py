@@ -5,6 +5,7 @@ from keras.preprocessing.image import (
     load_img,
 )
 import numpy as np
+import gc
 
 datagen = ImageDataGenerator(
         rotation_range=40,
@@ -15,8 +16,10 @@ datagen = ImageDataGenerator(
         horizontal_flip=True,
         fill_mode='nearest')
 
+
+# img = load_img(path)
+
 def augment_img(img, dir, tag):
-    # img = load_img(path)
     x = img_to_array(img)
     x = x.reshape((1,) + x.shape)
 
@@ -30,3 +33,5 @@ def augment_img(img, dir, tag):
         i += 1
         if i > 20:
             break
+
+    gc.collect()
