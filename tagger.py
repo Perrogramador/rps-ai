@@ -7,7 +7,8 @@ import time
 
 class Tagger:
     DEST_FOLDER = './training_data/'
-    FRAME_COORDS = ((350,100), (650,400))
+    # FRAME_COORDS = ((350,100), (650,400))
+    FRAME_COORDS = ((350,100), (600,350))
     TAGS = ['rock', 'paper','scissors']
 
     def __init__(self):
@@ -79,16 +80,16 @@ class Tagger:
             ]
 
             self.write(frame)
-            cv2.imshow("frame", frame)
-            # cv2.imshow("hsv", hsv)
+            # cv2.imshow("frame", frame)
+            cv2.imshow("hsv", hsv)
             # cv2.imshow("mask", mask)
             # cv2.imshow("res", res)
-            cv2.createTrackbar("h", "hsv", 0, 255, self.set_h)
-            cv2.createTrackbar("s", "hsv", 0, 255, self.set_s)
-            cv2.createTrackbar("v", "hsv", 0, 255, self.set_v)
-            cv2.createTrackbar("H", "hsv", 0, 255, self.set_H)
-            cv2.createTrackbar("S", "hsv", 0, 255, self.set_S)
-            cv2.createTrackbar("V", "hsv", 0, 255, self.set_V)
+            cv2.createTrackbar("h", "hsv", self.h, 255, self.set_h)
+            cv2.createTrackbar("s", "hsv", self.s, 255, self.set_s)
+            cv2.createTrackbar("v", "hsv", self.v, 255, self.set_v)
+            cv2.createTrackbar("H", "hsv", self.H, 255, self.set_H)
+            cv2.createTrackbar("S", "hsv", self.S, 255, self.set_S)
+            cv2.createTrackbar("V", "hsv", self.V, 255, self.set_V)
             
             
             key = cv2.waitKey(1)    
