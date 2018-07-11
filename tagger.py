@@ -80,8 +80,8 @@ class Tagger:
             ]
 
             self.write(frame)
-            # cv2.imshow("frame", frame)
-            cv2.imshow("hsv", hsv)
+            cv2.imshow("frame", frame)
+            # cv2.imshow("hsv", hsv)
             # cv2.imshow("mask", mask)
             # cv2.imshow("res", res)
             cv2.createTrackbar("h", "hsv", self.h, 255, self.set_h)
