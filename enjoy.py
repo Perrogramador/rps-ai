@@ -3,6 +3,7 @@
 import keras
 import cv2
 import numpy as np
+import time
 
 class Enjoy:
     # FRAME_COORDS = ((350,100), (650,400))
@@ -11,6 +12,8 @@ class Enjoy:
 
     def __init__(self, filePath):
         self.model = keras.models.load_model(filePath)
+
+        self.tagIdx = 0
 
         self.cap = cv2.VideoCapture(0)
         self.capture()
@@ -27,7 +30,9 @@ class Enjoy:
                 self.FRAME_COORDS[0][0] + 2 : self.FRAME_COORDS[1][0] - 1
             ]
             hand = cv2.resize(cropped, (150, 150))
-            predictedTag = self.identify(hand)
+            inputArray = np.zeros((1, 150, 150, 3))
+            inputArray[0, :, :, :] = hand
+            self.identify(inputArray)
 
             self.write(frame)
             cv2.imshow("frame", frame)
@@ -38,12 +43,14 @@ class Enjoy:
 
         cv2.destroyAllWindows()
 
-    def identify(img):
-        print (self.model.predict(img) )
+    def identify(self, img):
+        self.prediction = int(self.model.predict(img)[0][0])
+        print (self.prediction)
+
 
 
     def write(self, img):
-        cv2.putText(img, self.TAGS[self.tagIdx],
+        cv2.putText(img, self.TAGS[self.prediction],
             (self.FRAME_COORDS[0][0], self.FRAME_COORDS[0][1] - 40),
             cv2.FONT_HERSHEY_SIMPLEX, 1.0, (255,255,255), 2)
 
@@ -51,4 +58,4 @@ class Enjoy:
         self.tagIdx = (self.tagIdx + 1) % 3
 
 if __name__ == "__main__":
-    test = Enjoy('first_try.h5')
+    test = Enjoy('second_try.h5')
