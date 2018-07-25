@@ -62,7 +62,7 @@ class Tagger:
             ret, frame = self.cap.read()
 
             frame = cv2.flip(frame, 1)
-            frame = cv2.rectangle(frame, *self.FRAME_COORDS, (255,0,0), 2)
+            # frame = cv2.rectangle(frame, *self.FRAME_COORDS, (255,0,0), 2)
 
             # Convert frame to HSV
             hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
@@ -74,22 +74,22 @@ class Tagger:
             mask = cv2.inRange(hsv, lower_blue, upper_blue)
             res = cv2.bitwise_and(frame, frame, mask= mask)
 
-            cropped = frame[
-                self.FRAME_COORDS[0][1] + 2 : self.FRAME_COORDS[1][1] - 1,
-                self.FRAME_COORDS[0][0] + 2 : self.FRAME_COORDS[1][0] - 1
-            ]
+            # cropped = frame[
+                # self.FRAME_COORDS[0][1] + 2 : self.FRAME_COORDS[1][1] - 1,
+                # self.FRAME_COORDS[0][0] + 2 : self.FRAME_COORDS[1][0] - 1
+            # ]
 
-            self.write(frame)
-            cv2.imshow("frame", frame)
+            self.write(mask)
+            # cv2.imshow("frame", frame)
             # cv2.imshow("hsv", hsv)
-            # cv2.imshow("mask", mask)
+            cv2.imshow("mask", mask)
             # cv2.imshow("res", res)
-            cv2.createTrackbar("h", "hsv", self.h, 255, self.set_h)
-            cv2.createTrackbar("s", "hsv", self.s, 255, self.set_s)
-            cv2.createTrackbar("v", "hsv", self.v, 255, self.set_v)
-            cv2.createTrackbar("H", "hsv", self.H, 255, self.set_H)
-            cv2.createTrackbar("S", "hsv", self.S, 255, self.set_S)
-            cv2.createTrackbar("V", "hsv", self.V, 255, self.set_V)
+            cv2.createTrackbar("h", "mask", self.h, 255, self.set_h)
+            cv2.createTrackbar("s", "mask", self.s, 255, self.set_s)
+            cv2.createTrackbar("v", "mask", self.v, 255, self.set_v)
+            cv2.createTrackbar("H", "mask", self.H, 255, self.set_H)
+            cv2.createTrackbar("S", "mask", self.S, 255, self.set_S)
+            cv2.createTrackbar("V", "mask", self.V, 255, self.set_V)
             
             
             key = cv2.waitKey(1)    
@@ -97,7 +97,7 @@ class Tagger:
             if key & 0xFF == ord("q"):
                 break
             if key & 0xFF == ord("s"):
-                self.saveFrame(cropped)
+                self.saveFrame(mask)
             if key & 0xFF == ord("t"):
                 self.nextTag()
                 
@@ -113,9 +113,10 @@ class Tagger:
             (self.FRAME_COORDS[0][0] - 80, self.FRAME_COORDS[0][1] + 540),
             cv2.FONT_HERSHEY_SIMPLEX, 1.0, (255,255,255), 2)
 
-        cv2.putText(img, self.TAGS[self.tagIdx],
-            (self.FRAME_COORDS[0][0], self.FRAME_COORDS[0][1] - 40),
-            cv2.FONT_HERSHEY_SIMPLEX, 1.0, (255,255,255), 2)
+        # cv2.putText(img, self.TAGS[self.tagIdx],
+            # (self.FRAME_COORDS[0][0], self.FRAME_COORDS[0][1] - 40),
+            # cv2.FONT_HERSHEY_SIMPLEX, 1.0, (255,255,255), 2)
+        print(self.TAGS[self.tagIdx])
 
 
 if __name__ == "__main__":
