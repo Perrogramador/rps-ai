@@ -54,7 +54,7 @@ train_generator = train_datagen.flow_from_directory(
 
 # this is a similar generator, for validation data
 validation_generator = test_datagen.flow_from_directory(
-        'training_data_manual',
+        'training_data',
         target_size=(150, 150),
         batch_size=batch_size,
         class_mode='binary')

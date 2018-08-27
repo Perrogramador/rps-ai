@@ -58,4 +58,4 @@ class Enjoy:
         self.tagIdx = (self.tagIdx + 1) % 3
 
 if __name__ == "__main__":
-    test = Enjoy('second_try.h5')
+    test = Enjoy('third_try.h5')
