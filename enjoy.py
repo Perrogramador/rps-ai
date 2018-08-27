@@ -30,8 +30,10 @@ class Enjoy:
                 self.FRAME_COORDS[0][0] + 2 : self.FRAME_COORDS[1][0] - 1
             ]
             hand = cv2.resize(cropped, (150, 150))
+            silhouette = self.filter_blue(hand)
+
             inputArray = np.zeros((1, 150, 150, 3))
-            inputArray[0, :, :, :] = hand
+            inputArray[0, :, :, 2] = silhouette
             self.identify(inputArray)
 
             self.write(frame)
@@ -47,7 +49,13 @@ class Enjoy:
         self.prediction = int(self.model.predict(img)[0][0])
         print (self.prediction)
 
+    def filter_blue(self, frame):
+        hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
+        lower_blue = np.array([99, 41, 156])
+        upper_blue = np.array([115, 141, 255])
 
+        mask = cv2.inRange(hsv, lower_blue, upper_blue)
+        return mask
 
     def write(self, img):
         cv2.putText(img, self.TAGS[self.prediction],
